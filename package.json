@@ -1,0 +1,27 @@
+{
+  "name": "netlify-download-build-assets",
+  "version": "1.0.0",
+  "description": "load external assets for use in netlify builds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Roisholto/netlify-load-external-files.git"
+  },
+  "keywords": [
+    "netlify",
+    "build",
+    "assets"
+  ],
+  "author": "roisoetan@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Roisholto/netlify-load-external-files/issues"
+  },
+  "homepage": "https://github.com/Roisholto/netlify-load-external-files#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
