@@ -1,4 +1,4 @@
-const extFile = require('netlify-get-external-files') ;
+const extFile = require('../index.js') ;
 
 process.env.LOAD_EXTERNAL_FILES_CONFIG = JSON.stringify(
   {
@@ -14,3 +14,21 @@ process.env.LOAD_EXTERNAL_FILES_CONFIG = JSON.stringify(
 
     ]
   }) ;
+
+extFile.onPreBuild({
+  constants:{
+
+  },
+  utils:{
+    build:{
+      failPlugin(a){
+        console.log('failed plugin', a)
+      }
+    },
+    status:{
+      show:function(a){
+        console.log('showing ',a) ;
+      }
+    }
+  }
+  });
