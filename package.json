@@ -1,5 +1,5 @@
 {
-  "name": "netlify-download-build-assets",
+  "name": "get-netlify-build-assets-for-deploy",
   "version": "1.0.0",
   "description": "load external assets for use in netlify builds",
   "main": "index.js",
