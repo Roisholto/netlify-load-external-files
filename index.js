@@ -29,21 +29,7 @@ function fetchFile(file, saveAt, index){
 }
 
 module.exports = {
-  onBuild: ({constants, utils}) => {
-    try
-      {
-      const config = JSON.parse(process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
-      }
-    catch(e)
-      {
-      console.log('Error in downloader!', e.toString()) ;
-      }
-    // utils.build.cancelBuild({message:'closing deliberatly'}) ;
-  },
-
   onPreBuild: async ({constants, utils})=>{
-    // constants.PUBLISH_DIR ;
-
     try
       {
       console.log('Hello from external file downloader!', process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
