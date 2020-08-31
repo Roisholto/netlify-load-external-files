@@ -23,7 +23,7 @@ function fetchFile(file, saveAt, index){
         });
       }
     })
-    .catch('error', function(e) { // Handle errors
+    .catch( function(e) { // Handle errors
       console.log('error getting file', e) ;
   });
 }
