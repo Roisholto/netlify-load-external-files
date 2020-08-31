@@ -1,6 +1,6 @@
 {
   "name": "get-netlify-build-assets-for-deploy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "load external assets for use in netlify builds",
   "main": "index.js",
   "scripts": {
