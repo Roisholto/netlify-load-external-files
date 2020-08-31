@@ -30,13 +30,25 @@ function fetchFile(file, saveAt, index){
 
 module.exports = {
   onPreBuild: async ({constants, utils})=>{
-    try
+    console.log('Hello from netlify external file downloader!', process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
+    // check that LOAD_EXTERNAL_FILES_CONFIG is set in ENV
+    if(process.env.LOAD_EXTERNAL_FILES_CONFIG)
       {
-      console.log('Hello from external file downloader!', process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
-      const config = JSON.parse(process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
+      let config ;
+      try
+        {
+        config = JSON.parse(process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
+        }
+      catch (e)
+        {
+        utils.build.failPlugin('error encountered from get-external-files '+ e.toString())
+        return
+        }
+
       if(config)
         {
-        if(config.files.length){
+        if(config.files.length)
+          {
           const calls = [] ;
           let req ;
           let file ;
@@ -53,34 +65,26 @@ module.exports = {
 
             saveAt = path.join(local_dir, local_name)
             calls.push(fetchFile(file, saveAt, index)) ;
-
           })
 
           console.log('done fetching files') ;
           let hh = await Promise.all(calls) ;
           let message= `${succ} of ${config.files.length} saved` ;
 
-          console.log('File download complete',message)
+          console.log('File download complete', message)
           utils.status.show({
             title:'File download complete',
             summary: `${message}`,
             }) ;
+          }
 
-          // console.log(allCalls) ;
-          }
-          else{
-            console.log('config length 0')
-          }
         }
-        else
-          {
-          console.log('! config') ;
-          }
       }
-    catch (e)
+    else
       {
-      console.log()
-      utils.build.failPlugin('error encountered from get-external-files '+ e.toString())
+      console.log('environment variable LOAD_EXTERNAL_FILES_CONFIG not set') ;
       }
+
+
   }
 }
