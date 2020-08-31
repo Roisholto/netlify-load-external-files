@@ -5,21 +5,10 @@ const fs = require('fs') ;
 const axios = require('axios') ;
 let succ = 0 ;
 process.env.LOAD_EXTERNAL_FILES_CONFIG = JSON.stringify(
-  {
-    baseURL:"https://pinnacleplaza.blob.core.windows.net/assets",
-    //overrides saveAt
-    localPath:"img/icons",
-    files:[
-      {"extFile":"favicon.ico", "saveAt":""},
-      {"extFile":"favicon-16x16.png", "saveAt":"img/icons"},
-      {"extFile":"apple-icon-114x114.png", "saveAt":"img/icons"},
-      {"extFile":"ms-icon-144x144.png", "saveAt":"img/icons"},
-      {"extFile":"apple-icon-152x152.png", "saveAt":"img/icons"},
-
-    ]
-  }) ;
+  {"baseURL":"https://pinnacleplaza.blob.core.windows.net/assets","localPath":"img/icons","files":[{"extFile":"favicon.ico","saveAt":""}, {"extFile":"logo.png", "saveAt":"img"},{"extFile":"favicon-16x16.png","saveAt":"img/icons"},{"extFile":"favicon-32x32.png","saveAt":"img/icons"},{"extFile":"favicon-96x96.png","saveAt":"img/icons"},{"extFile":"ms-icon-70x70.png","saveAt":"img/icons"},{"extFile":"ms-icon-144x144.png","saveAt":"img/icons"},{"extFile":"ms-icon-150x150.png","saveAt":"img/icons"},{"extFile":"ms-icon-310x310.png","saveAt":"img/icons"},{"extFile":"apple-icon.png","saveAt":"img/icons"},{"extFile":"apple-icon-57x57.png","saveAt":"img/icons"},{"extFile":"apple-icon-60x60.png","saveAt":"img/icons"},{"extFile":"apple-icon-72x72.png","saveAt":"img/icons"},{"extFile":"apple-icon-76x76.png","saveAt":"img/icons"},{"extFile":"apple-icon-114x114.png","saveAt":"img/icons"},{"extFile":"apple-icon-120x120.png","saveAt":"img/icons"},{"extFile":"apple-icon-144x144.png","saveAt":"img/icons"},{"extFile":"apple-icon-152x152.png","saveAt":"img/icons"},{"extFile":"apple-icon-180x180.png","saveAt":"img/icons"},{"extFile":"apple-icon-precomposed.png","saveAt":"img/icons"},{"extFile":"android-icon-36x36.png","saveAt":"img/icons"},{"extFile":"android-icon-48x48.png","saveAt":"img/icons"},{"extFile":"android-icon-72x72.png","saveAt":"img/icons"},{"extFile":"android-icon-144x144.png","saveAt":"img/icons"},{"extFile":"android-icon-192x192.png","saveAt":"img/icons"},{"extFile":"safari-pinned-tabs.svg","saveAt":"img/icons"}]}) ;
 
 run() ;
+
 async function run (){
   const config = JSON.parse(process.env.LOAD_EXTERNAL_FILES_CONFIG) ;
   if(config)
