@@ -1,10 +1,19 @@
 {
   "name": "get-netlify-build-assets-for-deploy",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "load external assets for use in netlify builds",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "manifest.yml",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
