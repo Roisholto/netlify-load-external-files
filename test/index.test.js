@@ -444,10 +444,37 @@ test('logs a reason for each failure and the final count', async () => {
 
   await plugin.onPreBuild({ utils: makeUtils() });
 
-  assert.equal(logged(/error saving .*boom\.png/).length, 1);
+  assert.equal(logged(/skipped .*boom\.png \(status 500\)/).length, 1);
   assert.equal(logged(/skipped .*empty\.png \(status 204\)/).length, 1);
   assert.equal(logged(/saved public\/img\/good\.png/).length, 1);
   assert.equal(logged(/^File download complete 1 of 3 saved$/).length, 1);
+});
+
+// fetch reports every transport failure as a bare "fetch failed" and puts the
+// real reason on e.cause. Since a failed download only ever shows up in the log,
+// losing that unwrap would make the log useless without failing anything.
+test('logs the underlying reason for a transport failure', async () => {
+  const probe = http.createServer();
+  await new Promise((resolve) => probe.listen(0, '127.0.0.1', resolve));
+  const deadPort = probe.address().port;
+  await new Promise((resolve) => probe.close(resolve));
+
+  setConfig(config([{ extFile: 'favicon.ico', saveAt: '' }], {
+    baseURL: `http://127.0.0.1:${deadPort}/assets`,
+  }));
+
+  await plugin.onPreBuild({ utils: makeUtils() });
+
+  assert.equal(logged(/ECONNREFUSED/).length, 1);
+  assert.deepEqual(logged(/^\S+: error saving \S+ to \S+: fetch failed$/), []);
+});
+
+test('logs a usable reason for an unparseable baseURL', async () => {
+  setConfig(config([{ extFile: 'favicon.ico', saveAt: '' }], { baseURL: 'assets' }));
+
+  await plugin.onPreBuild({ utils: makeUtils() });
+
+  assert.equal(logged(/Failed to parse URL|Invalid URL/).length, 1);
 });
 
 test('logs why it did nothing when the environment variable is unset', async () => {

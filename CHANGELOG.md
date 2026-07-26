@@ -32,6 +32,16 @@ fixes, so read the "may now fail your build" list before upgrading.
 
 ### Changed
 
+- **Dropped the `axios` dependency for the built-in `fetch`.** The package now has **no
+  dependencies at all**, which removes both sources of its outstanding vulnerability
+  alerts (`axios` and its pinned `follow-redirects`) and the upgrade treadmill along
+  with them. Streaming to disk, redirect following and empty-body handling were
+  verified equivalent before the swap. Two behaviours improve: every non-200 status now
+  takes the same code path, so a 404 logs `skipped … (status 404)` instead of being
+  reported as a transport error; and an unparseable `baseURL` now says
+  `Failed to parse URL` rather than axios's misleading attempt to connect to `::1:80`.
+- **`engines` raised to Node >=20.** `fetch` is stable from Node 21, so Node 20 works
+  but logs an `ExperimentalWarning`. Netlify's build image defaults to Node 24.
 - Setting `localPath` now logs a warning. It has never had any effect, but the old
   README's example included it, so configs copied from that example said nothing.
 - `failPlugin` messages now name the offending entry index.
@@ -52,7 +62,7 @@ Per-file download failures still never fail the build.
 
 - Test suite on Node's built-in runner (`node --test`), no devDependencies. 100% line,
   branch and function coverage.
-- `engines: node >=18`, for `node:test` and `stream/promises`.
+- `engines: node >=20`, for `node:test`, `stream/promises` and the built-in `fetch`.
 - A `files` allowlist, so the published tarball no longer ships the test directory.
 - A README that documents configuration, where files land, and the failure model. The
   previous one's only example was invalid JSON.

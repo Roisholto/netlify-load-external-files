@@ -1,7 +1,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
+const { Readable } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
-const axios = require('axios');
 
 const PLUGIN = 'get-external-files';
 // Hardcoded rather than constants.PUBLISH_DIR: PUBLISH_DIR holds what the build
@@ -26,16 +26,18 @@ function namesAFile(extFile) {
 async function fetchFile(url, target) {
   try {
     fs.mkdirSync(path.dirname(target), { recursive: true });
-    const response = await axios.get(url, { responseType: 'stream' });
+    const response = await fetch(url);
     if (response.status !== 200) {
       console.log(`${PLUGIN}: skipped ${url} (status ${response.status})`);
       return false;
     }
-    await pipeline(response.data, fs.createWriteStream(target));
+    await pipeline(Readable.fromWeb(response.body), fs.createWriteStream(target));
     console.log(`${PLUGIN}: saved ${target}`);
     return true;
   } catch (e) {
-    console.log(`${PLUGIN}: error saving ${url} to ${target}:`, e.message);
+    // fetch reports transport failures as a bare "fetch failed"; the reason that
+    // is worth logging (ECONNREFUSED, DNS, TLS) hangs off the cause.
+    console.log(`${PLUGIN}: error saving ${url} to ${target}:`, e.cause?.message ?? e.message);
     return false;
   }
 }

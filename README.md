@@ -29,7 +29,11 @@ summary looks right but the assets are missing.
 
 ## Requirements
 
-- Node 18 or newer (the version in Netlify's build image, unless you've pinned an older one)
+- Node 20 or newer. Netlify's current build image defaults to Node 24, so this only
+  matters if you've pinned an older version via `.nvmrc` or `NODE_VERSION`. Downloads
+  use the built-in `fetch`, which is stable from Node 21 — on Node 20 it still works
+  but logs an `ExperimentalWarning`.
+- **No dependencies.** Nothing is installed into your build alongside this plugin.
 - Assets reachable over HTTPS **without auth headers**. The plugin sends no
   credentials, so for a private container use a pre-signed URL (an Azure SAS token,
   an S3 signed URL) as the `extFile` value — query strings are supported, and are
@@ -181,16 +185,18 @@ Things that are unlikely to change, as opposed to the roadmap above:
 ## Development
 
 ```bash
-npm install --no-package-lock   # this repo's lockfile is yarn.lock
 npm test
 ```
 
-Tests use Node's built-in runner (`node --test`), so there are no devDependencies.
+That's the whole setup — there is no install step, because the package has no
+dependencies and no devDependencies. Tests use Node's built-in runner (`node --test`).
+
 Nothing is stubbed: a throwaway HTTP server on `127.0.0.1` serves real bytes and the
 real filesystem receives them in a temp directory. That's what lets the suite catch
 ordering bugs — such as resolving before the bytes are flushed — that a fake write
-stream would hide. Run `VERBOSE=1 npm test` to see the plugin's own log output when a
-failure isn't self-explanatory.
+stream would hide, and it's why swapping the HTTP client could be verified rather than
+assumed. Run `VERBOSE=1 npm test` to see the plugin's own log output when a failure
+isn't self-explanatory.
 
 ## License
 

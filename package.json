@@ -10,7 +10,7 @@
     "CHANGELOG.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "node --test"
@@ -29,8 +29,5 @@
   "bugs": {
     "url": "https://github.com/Roisholto/netlify-load-external-files/issues"
   },
-  "homepage": "https://github.com/Roisholto/netlify-load-external-files#readme",
-  "dependencies": {
-    "axios": "^0.21.1"
-  }
+  "homepage": "https://github.com/Roisholto/netlify-load-external-files#readme"
 }
