@@ -1,9 +1,29 @@
 # Changelog
 
-## 1.1.0
+## 2.0.0
 
-First release with tests. Several of these are behaviour changes rather than pure
-fixes, so read the "may now fail your build" list before upgrading.
+First release with tests. Major rather than minor for two reasons: the minimum Node
+version went up, and several configurations that used to deploy green now fail the
+build. Read the breaking changes before upgrading.
+
+### Breaking
+
+- **Requires Node 18 or newer; Node 20+ recommended.** Downloads now use the built-in
+  `fetch`, which does not exist before Node 18. On an older runtime this release fails
+  with `ReferenceError: fetch is not defined` rather than degrading gracefully, where
+  1.0.2 ran anywhere axios did. `engines` is set to `>=20` because `fetch` is only
+  stable from Node 21 — Node 18 and 20 work but log an `ExperimentalWarning`. Netlify's
+  build image defaults to Node 24, so this only bites if you pin an older version via
+  `.nvmrc` or `NODE_VERSION`.
+- **Configurations that previously "succeeded" now fail the build.** Each of these was
+  already producing a corrupt or missing asset while reporting success, so a build that
+  starts failing is surfacing a pre-existing problem rather than a regression:
+  - two entries resolving to the same destination
+  - an `extFile` of `""`, or one ending in `/`
+  - a config with no `baseURL`
+  - a `null` entry, or a non-string `saveAt`
+
+  Per-file download failures still never fail the build.
 
 ### Fixed
 
@@ -40,23 +60,9 @@ fixes, so read the "may now fail your build" list before upgrading.
   takes the same code path, so a 404 logs `skipped … (status 404)` instead of being
   reported as a transport error; and an unparseable `baseURL` now says
   `Failed to parse URL` rather than axios's misleading attempt to connect to `::1:80`.
-- **`engines` raised to Node >=20.** `fetch` is stable from Node 21, so Node 20 works
-  but logs an `ExperimentalWarning`. Netlify's build image defaults to Node 24.
 - Setting `localPath` now logs a warning. It has never had any effect, but the old
   README's example included it, so configs copied from that example said nothing.
 - `failPlugin` messages now name the offending entry index.
-
-### May now fail your build
-
-All of these previously "succeeded" while doing something wrong, so a build that
-starts failing is surfacing a pre-existing problem rather than a regression:
-
-- a config with no `baseURL` (it used to request the literal string
-  `undefined/favicon.ico` and report `0 of N saved`)
-- an `extFile` of `""` or one ending in `/`
-- two entries resolving to the same destination
-
-Per-file download failures still never fail the build.
 
 ### Added
 
